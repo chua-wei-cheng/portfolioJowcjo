@@ -34,9 +34,9 @@ export default function ProfilePage() {
           <div>
             <strong>Email:</strong> {user.email}
           </div>
-          <div>
+          {/* <div>
             <strong>Name:</strong> {user.name}
-          </div>
+          </div> */}
           <Button onClick={handleLogout} className="w-full">Logout</Button>
         </CardContent>
       </Card>

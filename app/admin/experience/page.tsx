@@ -69,12 +69,22 @@ export default function AdminExperiencePage() {
       setDescription('')
       setTechnologies('')
       fetchExperiences()
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      })
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        // Safely access the `message` property
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        // Handle non-Error cases (fallback message)
+        toast({
+          title: "Error",
+          description: "An unknown error occurred.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false)
     }
