@@ -7,8 +7,8 @@ import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from
 
 async function getLatestExperience() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-    const res = await fetch(`${baseUrl}/api/experience`, { next: { revalidate: 3600 } });
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/experience`, { next: { revalidate: 60 } });
     if (!res.ok) {
       const errorData = await res.json();
       throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
@@ -24,7 +24,7 @@ async function getLatestExperience() {
 async function getRandomProject() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-    const res = await fetch(`${baseUrl}/api/projects`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${baseUrl}/api/projects`, { next: { revalidate: 60 } });
     if (!res.ok) {
       const errorData = await res.json();
       throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
@@ -41,7 +41,7 @@ async function getRandomProject() {
 async function getSkills() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-    const res = await fetch(`${baseUrl}/api/skills`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${baseUrl}/api/skills`, { next: { revalidate: 60 } });
     if (!res.ok) {
       const errorData = await res.json();
       throw new Error(errorData.error || `HTTP error! status: ${res.status}`);

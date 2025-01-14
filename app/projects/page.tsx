@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { Suspense } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -14,6 +15,7 @@ type Project = {
   demo_url: string
   image: string | null
 }
+
 
 async function getProjects(): Promise<Project[]> {
   const { data: projects, error } = await supabase
