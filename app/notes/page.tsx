@@ -1,81 +1,72 @@
 'use client';
-export const dynamic = 'force-dynamic';
-import { useEffect, useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useAuth } from '@/lib/auth/AuthContext'
 
-type Note = {
-  id: number
-  title: string
-  content: string
-  technology: string
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import { Loader2 } from 'lucide-react'
+
+type Category = {
+  id: string
+  name: string
+  slug: string
 }
 
-export default function NotesPage() {
-  const [notes, setNotes] = useState<Note[]>([]);
+export default function CategoriesPage() {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
 
   useEffect(() => {
-    const fetchNotes = async () => {
+    const fetchCategories = async () => {
       try {
         const response = await fetch('/api/notes');
         if (!response.ok) {
-          throw new Error('Failed to fetch notes');
+          throw new Error('Failed to fetch categories');
         }
         const data = await response.json();
-        setNotes(data.notes);
+        setCategories(data.categories);
       } catch (error) {
-        console.error('Error fetching notes:', error);
-        setError('Failed to fetch notes');
+        console.error('Error fetching categories:', error);
+        setError(error instanceof Error ? error.message : 'An unknown error occurred');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchNotes();
+    fetchCategories();
   }, []);
 
   if (loading) {
-    return <div>Loading notes...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+        <h1 className="text-3xl font-bold text-destructive mb-4">Error</h1>
+        <p className="text-xl text-foreground">{error}</p>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Tech Notes</h1>
-        <p className="text-muted-foreground mt-2">Quick reference notes for various technologies</p>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {notes.map((note) => (
-          <Card key={note.id}>
-            <CardHeader>
-              <CardTitle>{note.title}</CardTitle>
-              <CardDescription>{note.technology}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <pre className="whitespace-pre-wrap text-sm font-mono bg-muted p-4 rounded-lg">
-                {note.content}
-              </pre>
-            </CardContent>
-          </Card>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Note Categories</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {categories.map((category) => (
+          <Link href={`/notes/${category.slug.toLowerCase()}`} key={category.id}>
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <CardTitle>{category.name}</CardTitle>
+              </CardHeader>
+            </Card>
+          </Link>
         ))}
       </div>
-
-      {!user && (
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-center mb-4">Login to create new notes</p>
-          </CardContent>
-        </Card>
-      )}
     </div>
-  )
+  );
 }
-
