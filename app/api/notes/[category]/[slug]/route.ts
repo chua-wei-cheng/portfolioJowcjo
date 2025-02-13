@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase'
 
 export async function GET(
-  req: NextRequest, // ✅ Use NextRequest instead of Request
-  context: { params: { category: string; slug: string } }  // ✅ Explicitly define as context
+  request: Request,
+  { params }: { params: Promise<{ category: string; slug: string }> }
 ) {
   try {
-    const { category, slug } = context.params; // ✅ Extract from `context.params`
+    const { category, slug } = await params;
 
     const { data: note, error } = await supabase
       .from('notes')

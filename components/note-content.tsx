@@ -2,9 +2,6 @@
 
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useTheme } from 'next-themes'
 
 type ContentBlock = {
@@ -53,18 +50,12 @@ export default function NoteContent({ content }: NoteContentProps) {
             )
           }
 
-          const syntaxTheme = theme === 'dark' ? atomDark : oneLight
-
           return (
-            <SyntaxHighlighter
-              style={syntaxTheme}
-              language={language}
-              PreTag="div"
-              className="rounded-md overflow-hidden"
-              {...props}
-            >
-              {String(children).replace(/\n$/, '')}
-            </SyntaxHighlighter>
+            <pre className={`p-4 rounded-md overflow-x-auto ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-gray-100 text-gray-800'}`}>
+              <code className={`language-${language} ${getLanguageClass(language)}`} {...props}>
+                {String(children).replace(/\n$/, '')}
+              </code>
+            </pre>
           )
         },
         h2: ({ children }) => <h2 className="text-2xl font-bold mt-8 mb-4">{children}</h2>,
@@ -83,4 +74,24 @@ export default function NoteContent({ content }: NoteContentProps) {
       {markdownContent}
     </ReactMarkdown>
   )
+}
+
+function getLanguageClass(language: string): string {
+  // Add more language-specific classes as needed
+  switch (language) {
+    case 'javascript':
+    case 'js':
+      return 'text-yellow-400'
+    case 'typescript':
+    case 'ts':
+      return 'text-blue-400'
+    case 'python':
+      return 'text-green-400'
+    case 'html':
+      return 'text-red-400'
+    case 'css':
+      return 'text-pink-400'
+    default:
+      return 'text-gray-400'
+  }
 }
